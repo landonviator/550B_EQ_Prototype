@@ -77,11 +77,12 @@ void Viator550BPrototyperAudioProcessorEditor::resized()
     flexboxLeftThird.alignContent = juce::FlexBox::AlignContent::stretch;
     
     juce::Array<juce::FlexItem> itemArrayLeftThird;
-    itemArrayLeftThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, highMidSliderTrack).withMargin(36));
-    itemArrayLeftThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, lowSliderTrack));
+    itemArrayLeftThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, highMidSliderTrack).withMargin(juce::FlexItem::Margin(48, 0, 0, 0)));
+    itemArrayLeftThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, lowSliderTrack).withMargin(juce::FlexItem::Margin(0, 0, 0, 0)));
     
     flexboxLeftThird.items = itemArrayLeftThird;
     flexboxLeftThird.performLayout(bounds.removeFromLeft(bounds.getWidth() / 3));
+    std::cout << bounds.getHeight() << std::endl;
 }
 
 void Viator550BPrototyperAudioProcessorEditor::sliderValueChanged(juce::Slider *slider){
