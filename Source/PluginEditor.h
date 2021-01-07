@@ -55,10 +55,10 @@ private:
     juce::Slider lowSlider, lowMidSlider, highMidSlider, highSlider;
     std::vector<juce::Slider*> sliders;
     
-    juce::Slider lowSliderTrack, lowMidSliderTrack, highMidSliderTrack, highSliderTrack;
+    juce::Slider lowSliderTrack, lowMidSliderTrack, highMidSliderTrack, highSliderTrack, driveSliderTrack, trimSliderTrack;
     std::vector<juce::Slider*> tracks;
     
-    juce::Label lowSliderLabel, lowMidSliderLabel, highMidSliderLabel, highSliderLabel;
+    juce::Label lowSliderLabel, lowMidSliderLabel, highMidSliderLabel, highSliderLabel, driveSliderLabel, trimSliderLabel;
     std::vector<juce::Label*> labels;
     
     std::string lowSliderLabelText = "Low";
