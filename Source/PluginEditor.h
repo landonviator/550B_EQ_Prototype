@@ -40,7 +40,7 @@ public:
     }
 };
 
-class Viator550BPrototyperAudioProcessorEditor  : public juce::AudioProcessorEditor, juce::Slider::Listener
+class Viator550BPrototyperAudioProcessorEditor  : public juce::AudioProcessorEditor, juce::Slider::Listener, juce::Button::Listener
 {
 public:
     Viator550BPrototyperAudioProcessorEditor (Viator550BPrototyperAudioProcessor&);
@@ -50,6 +50,8 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
     void sliderValueChanged(juce::Slider* slider) override;
+    void buttonClicked(juce::Button* button) override;
+
 
 private:
     juce::Slider lowSlider, lowMidSlider, highMidSlider, highSlider;
@@ -61,10 +63,15 @@ private:
     juce::Label lowSliderLabel, lowMidSliderLabel, highMidSliderLabel, highSliderLabel, driveSliderLabel, trimSliderLabel;
     std::vector<juce::Label*> labels;
     
+    juce::TextButton lowToggle, lowMidToggle, highMidToggle, highToggle;
+    std::vector<juce::TextButton*> buttons;
+    
     std::string lowSliderLabelText = "Low";
     std::string lowMidSliderLabelText = "Low Mid";
     std::string highMidSliderLabelText = "High Mid";
     std::string highSliderLabelText = "High";
+    std::string driveSliderLabelText = "Drive";
+    std::string trimSliderLabelText = "Trim";
 
     std::vector<std::string> labelTexts;
     

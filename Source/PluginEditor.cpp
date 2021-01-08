@@ -12,123 +12,69 @@
 //==============================================================================
 Viator550BPrototyperAudioProcessorEditor::Viator550BPrototyperAudioProcessorEditor (Viator550BPrototyperAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p)
+
 {
-    //Low slider track, for frequency
-    addAndMakeVisible(lowSliderTrack);
-    lowSliderTrack.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalDrag);
-    lowSliderTrack.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 64, 32);
-    lowSliderTrack.setRange(0, 6, 1);
-    lowSliderTrack.setColour(0x1001700, juce::Colour::fromFloatRGBA(0, 0, 0, 0));
-    lowSliderTrack.setColour(0x1001400, juce::Colour::fromFloatRGBA(1, 1, 1, 0.0f));
-    lowSliderTrack.setColour(0x1001300, juce::Colour::fromFloatRGBA(1, 1, 1, 0));
-    lowSliderTrack.setColour(0x1001312, juce::Colour::fromFloatRGBA(0, 0, 0, .25));
-    lowSliderTrack.setColour(0x1001311, juce::Colour::fromFloatRGBA(.2, .77, 1, 0.5f));
-
-    //Low Label
-    addAndMakeVisible(lowSliderLabel);
-    lowSliderLabel.setText("Low", juce::dontSendNotification);
-    lowSliderLabel.setJustificationType(juce::Justification::centred);
-    lowSliderLabel.setColour(0x1000281, juce::Colour::fromFloatRGBA(1, 1, 1, 0.5f));
-    lowSliderLabel.attachToComponent(&lowSliderTrack, false);
-//------------------------------------------------------------------------------------------
     
-    //High mid slider track, for frequency
-    addAndMakeVisible(highMidSliderTrack);
-    highMidSliderTrack.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalDrag);
-    highMidSliderTrack.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 64, 32);
-    highMidSliderTrack.setRange(0, 6, 1);
-    highMidSliderTrack.setColour(0x1001700, juce::Colour::fromFloatRGBA(0, 0, 0, 0));
-    highMidSliderTrack.setColour(0x1001400, juce::Colour::fromFloatRGBA(1, 1, 1, 0.0f));
-    highMidSliderTrack.setColour(0x1001300, juce::Colour::fromFloatRGBA(1, 1, 1, 0));
-    highMidSliderTrack.setColour(0x1001312, juce::Colour::fromFloatRGBA(0, 0, 0, .25));
-    highMidSliderTrack.setColour(0x1001311, juce::Colour::fromFloatRGBA(.2, .77, 1, 0.5f));
-
-    //High Mid Label
-    addAndMakeVisible(highMidSliderLabel);
-    highMidSliderLabel.setText("High Mid", juce::dontSendNotification);
-    highMidSliderLabel.setJustificationType(juce::Justification::centred);
-    highMidSliderLabel.setColour(0x1000281, juce::Colour::fromFloatRGBA(1, 1, 1, 0.5f));
-    highMidSliderLabel.attachToComponent(&highMidSliderTrack, false);
-//------------------------------------------------------------------------------------------
+    buttons.reserve(4);
+    buttons = {
+            &lowToggle, &lowMidToggle, &highMidToggle, &highToggle
+        };
     
-    //High slider track, for frequency
-    addAndMakeVisible(highSliderTrack);
-    highSliderTrack.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalDrag);
-    highSliderTrack.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 64, 32);
-    highSliderTrack.setRange(0, 6, 1);
-    highSliderTrack.setColour(0x1001700, juce::Colour::fromFloatRGBA(0, 0, 0, 0));
-    highSliderTrack.setColour(0x1001400, juce::Colour::fromFloatRGBA(1, 1, 1, 0.0f));
-    highSliderTrack.setColour(0x1001300, juce::Colour::fromFloatRGBA(1, 1, 1, 0));
-    highSliderTrack.setColour(0x1001312, juce::Colour::fromFloatRGBA(0, 0, 0, .25));
-    highSliderTrack.setColour(0x1001311, juce::Colour::fromFloatRGBA(.2, .77, 1, 0.5f));
-
-    //High Label
-    addAndMakeVisible(highSliderLabel);
-    highSliderLabel.setText("High", juce::dontSendNotification);
-    highSliderLabel.setJustificationType(juce::Justification::centred);
-    highSliderLabel.setColour(0x1000281, juce::Colour::fromFloatRGBA(1, 1, 1, 0.5f));
-    highSliderLabel.attachToComponent(&highSliderTrack, false);
-//------------------------------------------------------------------------------------------
+    tracks.reserve(6);
+    tracks = {
+        &lowSliderTrack, &lowMidSliderTrack, &highMidSliderTrack, &highSliderTrack, &driveSliderTrack, &trimSliderTrack
+    };
     
-    //Low mid slider track, for frequency
-    addAndMakeVisible(lowMidSliderTrack);
-    lowMidSliderTrack.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalDrag);
-    lowMidSliderTrack.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 64, 32);
-    lowMidSliderTrack.setRange(0, 6, 1);
-    lowMidSliderTrack.setColour(0x1001700, juce::Colour::fromFloatRGBA(0, 0, 0, 0));
-    lowMidSliderTrack.setColour(0x1001400, juce::Colour::fromFloatRGBA(1, 1, 1, 0.0f));
-    lowMidSliderTrack.setColour(0x1001300, juce::Colour::fromFloatRGBA(1, 1, 1, 0));
-    lowMidSliderTrack.setColour(0x1001312, juce::Colour::fromFloatRGBA(0, 0, 0, .25));
-    lowMidSliderTrack.setColour(0x1001311, juce::Colour::fromFloatRGBA(.2, .77, 1, 0.5f));
-
-    //Low Mid Label
-    addAndMakeVisible(lowMidSliderLabel);
-    lowMidSliderLabel.setText("Low Mid", juce::dontSendNotification);
-    lowMidSliderLabel.setJustificationType(juce::Justification::centred);
-    lowMidSliderLabel.setColour(0x1000281, juce::Colour::fromFloatRGBA(1, 1, 1, 0.5f));
-    lowMidSliderLabel.attachToComponent(&lowMidSliderTrack, false);
-//------------------------------------------------------------------------------------------
+    labels.reserve(6);
+    labels = {
+        &lowSliderLabel, &lowMidSliderLabel, &highMidSliderLabel, &highSliderLabel, &driveSliderLabel, &trimSliderLabel
+    };
     
-    //Drive slider
-    addAndMakeVisible(driveSliderTrack);
-    driveSliderTrack.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    driveSliderTrack.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 64, 32);
+    labelTexts.reserve(6);
+    labelTexts = {
+        lowSliderLabelText, lowMidSliderLabelText, highMidSliderLabelText, highSliderLabelText, driveSliderLabelText, trimSliderLabelText
+    };
+    
+    for (auto i = 0; i < tracks.size(); i++) {
+        addAndMakeVisible(tracks[i]);
+        tracks[i]->setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+        tracks[i]->setTextBoxStyle(juce::Slider::TextBoxBelow, true, 64, 32);
+        tracks[i]->setRange(0, 6, 1);
+        tracks[i]->setColour(0x1001700, juce::Colour::fromFloatRGBA(0, 0, 0, 0));
+        tracks[i]->setColour(0x1001400, juce::Colour::fromFloatRGBA(1, 1, 1, 0.0f));
+        tracks[i]->setColour(0x1001300, juce::Colour::fromFloatRGBA(1, 1, 1, 0));
+        tracks[i]->setColour(0x1001312, juce::Colour::fromFloatRGBA(0, 0, 0, .25));
+        tracks[i]->setColour(0x1001311, juce::Colour::fromFloatRGBA(.2, .77, 1, 0.5f));
+        tracks[i]->setLookAndFeel(&otherLookAndFeel);
+    }
+    
     driveSliderTrack.setRange(0, 24, 0.5f);
-    driveSliderTrack.setColour(0x1001700, juce::Colour::fromFloatRGBA(0, 0, 0, 0));
-    driveSliderTrack.setColour(0x1001400, juce::Colour::fromFloatRGBA(1, 1, 1, 0.0f));
-    driveSliderTrack.setColour(0x1001300, juce::Colour::fromFloatRGBA(1, 1, 1, 0));
-    driveSliderTrack.setColour(0x1001312, juce::Colour::fromFloatRGBA(0, 0, 0, .25));
-    driveSliderTrack.setColour(0x1001311, juce::Colour::fromFloatRGBA(.2, .77, 1, 0.5f));
-
-    //Drive Label
-    addAndMakeVisible(driveSliderLabel);
-    driveSliderLabel.setText("Drive", juce::dontSendNotification);
-    driveSliderLabel.setJustificationType(juce::Justification::centred);
-    driveSliderLabel.setColour(0x1000281, juce::Colour::fromFloatRGBA(1, 1, 1, 0.5f));
-    driveSliderLabel.attachToComponent(&driveSliderTrack, false);
-//------------------------------------------------------------------------------------------
-    
-    //Trim slider
-    addAndMakeVisible(trimSliderTrack);
-    trimSliderTrack.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    trimSliderTrack.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 64, 32);
+    driveSliderTrack.setDoubleClickReturnValue(true, 0);
     trimSliderTrack.setRange(-36, 36, 0.5f);
-    trimSliderTrack.setColour(0x1001700, juce::Colour::fromFloatRGBA(0, 0, 0, 0));
-    trimSliderTrack.setColour(0x1001400, juce::Colour::fromFloatRGBA(1, 1, 1, 0.0f));
-    trimSliderTrack.setColour(0x1001300, juce::Colour::fromFloatRGBA(1, 1, 1, 0));
-    trimSliderTrack.setColour(0x1001312, juce::Colour::fromFloatRGBA(0, 0, 0, .25));
-    trimSliderTrack.setColour(0x1001311, juce::Colour::fromFloatRGBA(.2, .77, 1, 0.5f));
-
-    //Trim Label
-    addAndMakeVisible(trimSliderLabel);
-    trimSliderLabel.setText("Trim", juce::dontSendNotification);
-    trimSliderLabel.setJustificationType(juce::Justification::centred);
-    trimSliderLabel.setColour(0x1000281, juce::Colour::fromFloatRGBA(1, 1, 1, 0.5f));
-    trimSliderLabel.attachToComponent(&trimSliderTrack, false);
-//------------------------------------------------------------------------------------------
+    trimSliderTrack.setDoubleClickReturnValue(true, 0);
+    
+    for (auto i = 0; i < labels.size(); i++) {
+        addAndMakeVisible(labels[i]);
+        labels[i]->setText(labelTexts[i], juce::dontSendNotification);
+        labels[i]->setJustificationType(juce::Justification::centred);
+        labels[i]->setColour(0x1000281, juce::Colour::fromFloatRGBA(1, 1, 1, 0.5f));
+    }
+    
+    for (auto i = 0; i < buttons.size(); i++) {
+        addAndMakeVisible(buttons[i]);
+        buttons[i]->addListener(this);
+        buttons[i]->setButtonText("Gain");
+        buttons[i]->setColour(0x1000100, juce::Colour::fromFloatRGBA(0, 0, 0, .15));
+        buttons[i]->setColour(0x1000c00, juce::Colour::fromFloatRGBA(0, 0, 0, 0));
+        buttons[i]->setColour(0x1000101, juce::Colour::fromFloatRGBA(0, 0, 0, .15));
+        buttons[i]->setColour(0x1000102, juce::Colour::fromFloatRGBA(1, 1, 1, 0.35));
+        buttons[i]->setColour(0x1000103, juce::Colour::fromFloatRGBA(.23, .77, 1, 0.5));
+        buttons[i]->setClickingTogglesState(true);
+        buttons[i]->changeWidthToFitText();
+    }
 
     AudioProcessorEditor::setResizable(true, true);
-    AudioProcessorEditor::setResizeLimits(256, 192, 1024, 768);
+    AudioProcessorEditor::setResizeLimits(384, 288, 640, 480);
     AudioProcessorEditor::getConstrainer()->setFixedAspectRatio(1.3);
     setSize (512, 384);
 }
@@ -155,7 +101,7 @@ void Viator550BPrototyperAudioProcessorEditor::resized()
     flexboxLeftThird.alignContent = juce::FlexBox::AlignContent::stretch;
     
     juce::Array<juce::FlexItem> itemArrayLeftThird;
-    itemArrayLeftThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, highMidSliderTrack).withMargin(juce::FlexItem::Margin(48, 0, 0, 0)));
+    itemArrayLeftThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, highMidSliderTrack).withMargin(juce::FlexItem::Margin(AudioProcessorEditor::getWidth() * 0.1f, 0, 0, 0)));
     itemArrayLeftThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, lowSliderTrack).withMargin(juce::FlexItem::Margin(0, 0, 0, 0)));
     
     flexboxLeftThird.items = itemArrayLeftThird;
@@ -169,7 +115,7 @@ void Viator550BPrototyperAudioProcessorEditor::resized()
     flexboxMiddleThird.alignContent = juce::FlexBox::AlignContent::stretch;
     
     juce::Array<juce::FlexItem> itemArrayMiddleThird;
-    itemArrayMiddleThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, highSliderTrack).withMargin(juce::FlexItem::Margin(48, 0, 0, 0)));
+    itemArrayMiddleThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, highSliderTrack).withMargin(juce::FlexItem::Margin(AudioProcessorEditor::getWidth() * 0.1f, 0, 0, 0)));
     itemArrayMiddleThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, lowMidSliderTrack).withMargin(juce::FlexItem::Margin(0, 0, 0, 0)));
     
     flexboxMiddleThird.items = itemArrayMiddleThird;
@@ -183,18 +129,42 @@ void Viator550BPrototyperAudioProcessorEditor::resized()
     flexboxRightThird.alignContent = juce::FlexBox::AlignContent::stretch;
     
     juce::Array<juce::FlexItem> itemArrayRightThird;
-    itemArrayRightThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, driveSliderTrack).withMargin(juce::FlexItem::Margin(48, 0, 0, 0)));
+    itemArrayRightThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, driveSliderTrack).withMargin(juce::FlexItem::Margin(AudioProcessorEditor::getWidth() * 0.1f, 0, 0, 0)));
     itemArrayRightThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, trimSliderTrack).withMargin(juce::FlexItem::Margin(0, 0, 0, 0)));
     
     flexboxRightThird.items = itemArrayRightThird;
     flexboxRightThird.performLayout(bounds.removeFromLeft(bounds.getWidth()));
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    
+    lowSliderLabel.setBounds(lowSliderTrack.getX() + (lowSliderTrack.getWidth() * 0.25), lowSliderTrack.getY() * .75, lowSliderTrack.getWidth() * .5, lowSliderTrack.getHeight() * .75);
+    lowMidSliderLabel.setBounds(lowMidSliderTrack.getX() + (lowMidSliderTrack.getWidth() * 0.25), lowMidSliderTrack.getY() * .75, lowMidSliderTrack.getWidth() * .5, lowMidSliderTrack.getHeight() * .75);
+    trimSliderLabel.setBounds(trimSliderTrack.getX() + (trimSliderTrack.getWidth() * 0.25), trimSliderTrack.getY() * .75, trimSliderTrack.getWidth() * .5, trimSliderTrack.getHeight() * .75);
+    
+    highMidSliderLabel.setBounds(highMidSliderTrack.getX() + (highMidSliderTrack.getWidth() * 0.25), (highMidSliderTrack.getY() * .95) - AudioProcessorEditor::getWidth() * 0.1f, highMidSliderTrack.getWidth() * .5, highMidSliderTrack.getHeight() * .75);
+    highSliderLabel.setBounds(highSliderTrack.getX() + (highSliderTrack.getWidth() * 0.25), (highSliderTrack.getY() * .95) - AudioProcessorEditor::getWidth() * 0.1f, highSliderTrack.getWidth() * .5, highSliderTrack.getHeight() * .75);
+    driveSliderLabel.setBounds(driveSliderTrack.getX() + (driveSliderTrack.getWidth() * 0.25), (driveSliderTrack.getY() * .95) - AudioProcessorEditor::getWidth() * 0.1f, driveSliderTrack.getWidth() * .5, driveSliderTrack.getHeight() * .75);
+    
+    lowToggle.setBounds(lowSliderTrack.getX() + (lowSliderTrack.getWidth() * .32), lowSliderTrack.getY() + (lowSliderTrack.getHeight() * .75), lowSliderLabel.getWidth() * .75, lowSliderLabel.getHeight() * .25);
+    lowMidToggle.setBounds(lowMidSliderTrack.getX() + (lowMidSliderTrack.getWidth() * .32), lowMidSliderTrack.getY() + (lowMidSliderTrack.getHeight() * .75), lowMidSliderLabel.getWidth() * .75, lowMidSliderLabel.getHeight()* .25);
+    highMidToggle.setBounds(highMidSliderTrack.getX() + (highMidSliderTrack.getWidth() * .32), highMidSliderTrack.getY() + (highMidSliderTrack.getHeight() * .75), highMidSliderLabel.getWidth() * .75, highMidSliderLabel.getHeight()* .25);
+    highToggle.setBounds(highSliderTrack.getX() + (highSliderTrack.getWidth() * .32), highSliderTrack.getY() + (highSliderTrack.getHeight() * .75), highSliderLabel.getWidth() * .75, highSliderLabel.getHeight()* .25);
+
 }
 
 void Viator550BPrototyperAudioProcessorEditor::sliderValueChanged(juce::Slider *slider){
-//    for (size_t i {0}; i < sliders.size(); i++) {
-//        if (slider == tracks[i]){
-//            sliders[i]->setValue(tracks[i]->getValue());
-//        }
-//    }
+
+}
+
+void Viator550BPrototyperAudioProcessorEditor::buttonClicked(juce::Button *button){
+    
+    for (auto i = 0; i < buttons.size(); i++) {
+        if (button == buttons[i]){
+            if (buttons[i]->getToggleState() == true){
+                buttons[i]->setButtonText("Freq");
+            } else {
+                buttons[i]->setButtonText("Gain");
+            }
+        }
+    }
 }
