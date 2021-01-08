@@ -35,11 +35,17 @@ Viator550BPrototyperAudioProcessorEditor::Viator550BPrototyperAudioProcessorEdit
         lowSliderLabelText, lowMidSliderLabelText, highMidSliderLabelText, highSliderLabelText, driveSliderLabelText, trimSliderLabelText
     };
     
+    sliders.reserve(4);
+    sliders = {
+        &lowSlider, &lowMidSlider, &highMidSlider, &highSlider
+    };
+    
+    //Slider tracks, gain
     for (auto i = 0; i < tracks.size(); i++) {
         addAndMakeVisible(tracks[i]);
         tracks[i]->setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
         tracks[i]->setTextBoxStyle(juce::Slider::TextBoxBelow, true, 64, 32);
-        tracks[i]->setRange(0, 6, 1);
+        tracks[i]->setRange(-18, 18, 1.5);
         tracks[i]->setColour(0x1001700, juce::Colour::fromFloatRGBA(0, 0, 0, 0));
         tracks[i]->setColour(0x1001400, juce::Colour::fromFloatRGBA(1, 1, 1, 0.0f));
         tracks[i]->setColour(0x1001300, juce::Colour::fromFloatRGBA(1, 1, 1, 0));
@@ -52,6 +58,20 @@ Viator550BPrototyperAudioProcessorEditor::Viator550BPrototyperAudioProcessorEdit
     driveSliderTrack.setDoubleClickReturnValue(true, 0);
     trimSliderTrack.setRange(-36, 36, 0.5f);
     trimSliderTrack.setDoubleClickReturnValue(true, 0);
+    
+    //Sliders, frequency
+    for (auto i = 0; i < sliders.size(); i++) {
+        addAndMakeVisible(sliders[i]);
+        sliders[i]->setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+        sliders[i]->setTextBoxStyle(juce::Slider::TextBoxBelow, true, 64, 32);
+        sliders[i]->setRange(0, 6, 1);
+        sliders[i]->setColour(0x1001700, juce::Colour::fromFloatRGBA(0, 0, 0, 0));
+        sliders[i]->setColour(0x1001400, juce::Colour::fromFloatRGBA(1, 1, 1, 0.0f));
+        sliders[i]->setColour(0x1001300, juce::Colour::fromFloatRGBA(1, 1, 1, 0));
+        sliders[i]->setColour(0x1001312, juce::Colour::fromFloatRGBA(0, 0, 0, .25));
+        sliders[i]->setColour(0x1001311, juce::Colour::fromFloatRGBA(.2, .77, 1, 0.5f));
+        sliders[i]->setLookAndFeel(&otherLookAndFeel2);
+    }
     
     for (auto i = 0; i < labels.size(); i++) {
         addAndMakeVisible(labels[i]);
@@ -71,6 +91,14 @@ Viator550BPrototyperAudioProcessorEditor::Viator550BPrototyperAudioProcessorEdit
         buttons[i]->setColour(0x1000103, juce::Colour::fromFloatRGBA(.23, .77, 1, 0.5));
         buttons[i]->setClickingTogglesState(true);
         buttons[i]->changeWidthToFitText();
+        
+        if (buttons[i]->getToggleState() == true) {
+            tracks[i]->setVisible(false);
+            sliders[i]->setVisible(true);
+        } else {
+            tracks[i]->setVisible(true);
+            sliders[i]->setVisible(false);
+        }
     }
 
     AudioProcessorEditor::setResizable(true, true);
@@ -149,6 +177,10 @@ void Viator550BPrototyperAudioProcessorEditor::resized()
     lowMidToggle.setBounds(lowMidSliderTrack.getX() + (lowMidSliderTrack.getWidth() * .32), lowMidSliderTrack.getY() + (lowMidSliderTrack.getHeight() * .75), lowMidSliderLabel.getWidth() * .75, lowMidSliderLabel.getHeight()* .25);
     highMidToggle.setBounds(highMidSliderTrack.getX() + (highMidSliderTrack.getWidth() * .32), highMidSliderTrack.getY() + (highMidSliderTrack.getHeight() * .75), highMidSliderLabel.getWidth() * .75, highMidSliderLabel.getHeight()* .25);
     highToggle.setBounds(highSliderTrack.getX() + (highSliderTrack.getWidth() * .32), highSliderTrack.getY() + (highSliderTrack.getHeight() * .75), highSliderLabel.getWidth() * .75, highSliderLabel.getHeight()* .25);
+    
+    for (auto i = 0; i < sliders.size(); i++) {
+        sliders[i]->setBounds(tracks[i]->getX(), tracks[i]->getY(), tracks[i]->getWidth(), tracks[i]->getHeight());
+    }
 
 }
 
@@ -162,8 +194,13 @@ void Viator550BPrototyperAudioProcessorEditor::buttonClicked(juce::Button *butto
         if (button == buttons[i]){
             if (buttons[i]->getToggleState() == true){
                 buttons[i]->setButtonText("Freq");
+                sliders[i]->setVisible(true);
+                tracks[i]->setVisible(false);
             } else {
                 buttons[i]->setButtonText("Gain");
+                tracks[i]->setVisible(true);
+                sliders[i]->setVisible(false);
+
             }
         }
     }
