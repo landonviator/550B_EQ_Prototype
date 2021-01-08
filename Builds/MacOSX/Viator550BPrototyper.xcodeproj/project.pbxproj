@@ -85,6 +85,10 @@
 			isa = PBXBuildFile;
 			fileRef = 419F4746708611E294848515;
 		};
+		0088704ADDA64A1414762CFE = {
+			isa = PBXBuildFile;
+			fileRef = 7FF069244E1A9044F7DC129A;
+		};
 		8B7AB3A8ABC090CDC31543CA = {
 			isa = PBXBuildFile;
 			fileRef = 3B929D2E1D00235E7DA6E2A0;
@@ -273,6 +277,13 @@
 			path = "../../JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp";
 			sourceTree = "SOURCE_ROOT";
 		};
+		29A785131C63D1D517F1999E = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = eqBackground.png;
+			path = ../../Source/eqBackground.png;
+			sourceTree = "SOURCE_ROOT";
+		};
 		344B6FF5A4D0A9AC21F441D2 = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
@@ -385,6 +396,13 @@
 			path = "/Users/land00m/Documents/JUCE/modules/juce_audio_plugin_client";
 			sourceTree = "<absolute>";
 		};
+		6872741DE11AC9C39729ED72 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = BinaryData.h;
+			path = ../../JuceLibraryCode/BinaryData.h;
+			sourceTree = "SOURCE_ROOT";
+		};
 		72710802E3BE4D46895CC7CE = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.objcpp;
@@ -404,6 +422,13 @@
 			lastKnownFileType = sourcecode.cpp.objcpp;
 			name = "include_juce_audio_plugin_client_VST_utils.mm";
 			path = "../../JuceLibraryCode/include_juce_audio_plugin_client_VST_utils.mm";
+			sourceTree = "SOURCE_ROOT";
+		};
+		7FF069244E1A9044F7DC129A = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = BinaryData.cpp;
+			path = ../../JuceLibraryCode/BinaryData.cpp;
 			sourceTree = "SOURCE_ROOT";
 		};
 		9C212CE0B719B47228626F6F = {
@@ -589,6 +614,7 @@
 			isa = PBXGroup;
 			children = (
 				0843186592535B1FC76022F6,
+				29A785131C63D1D517F1999E,
 			);
 			name = Viator550BPrototyper;
 			sourceTree = "<group>";
@@ -616,6 +642,8 @@
 		E18896A713014B51382ED171 = {
 			isa = PBXGroup;
 			children = (
+				7FF069244E1A9044F7DC129A,
+				6872741DE11AC9C39729ED72,
 				3B929D2E1D00235E7DA6E2A0,
 				72710802E3BE4D46895CC7CE,
 				09C7181EDF7CC9B4D169B064,
@@ -2012,6 +2040,7 @@
 			files = (
 				6B046D8BCF1697AEB3F75528,
 				08395D07FB237BB362D1F6F6,
+				0088704ADDA64A1414762CFE,
 				8B7AB3A8ABC090CDC31543CA,
 				5E5E95301B5E3A96A88EAAEC,
 				16B222A4181C37B4B259B074,

@@ -51,7 +51,7 @@ Viator550BPrototyperAudioProcessorEditor::Viator550BPrototyperAudioProcessorEdit
         tracks[i]->setColour(0x1001300, juce::Colour::fromFloatRGBA(1, 1, 1, 0));
         tracks[i]->setColour(0x1001312, juce::Colour::fromFloatRGBA(0, 0, 0, .25));
         tracks[i]->setColour(0x1001311, juce::Colour::fromFloatRGBA(.2, .77, 1, 0.5f));
-        tracks[i]->setLookAndFeel(&otherLookAndFeel);
+        tracks[i]->setLookAndFeel(&otherLookAndFeel2);
     }
     
     driveSliderTrack.setRange(0, 24, 0.5f);
@@ -70,7 +70,7 @@ Viator550BPrototyperAudioProcessorEditor::Viator550BPrototyperAudioProcessorEdit
         sliders[i]->setColour(0x1001300, juce::Colour::fromFloatRGBA(1, 1, 1, 0));
         sliders[i]->setColour(0x1001312, juce::Colour::fromFloatRGBA(0, 0, 0, .25));
         sliders[i]->setColour(0x1001311, juce::Colour::fromFloatRGBA(.2, .77, 1, 0.5f));
-        sliders[i]->setLookAndFeel(&otherLookAndFeel2);
+        sliders[i]->setLookAndFeel(&otherLookAndFeel);
     }
     
     for (auto i = 0; i < labels.size(); i++) {
@@ -84,7 +84,7 @@ Viator550BPrototyperAudioProcessorEditor::Viator550BPrototyperAudioProcessorEdit
         addAndMakeVisible(buttons[i]);
         buttons[i]->addListener(this);
         buttons[i]->setButtonText("Gain");
-        buttons[i]->setColour(0x1000100, juce::Colour::fromFloatRGBA(0, 0, 0, .15));
+        buttons[i]->setColour(0x1000100, juce::Colour::fromFloatRGBA(0, 0, 0, .75));
         buttons[i]->setColour(0x1000c00, juce::Colour::fromFloatRGBA(0, 0, 0, 0));
         buttons[i]->setColour(0x1000101, juce::Colour::fromFloatRGBA(0, 0, 0, .15));
         buttons[i]->setColour(0x1000102, juce::Colour::fromFloatRGBA(1, 1, 1, 0.35));
@@ -114,14 +114,16 @@ Viator550BPrototyperAudioProcessorEditor::~Viator550BPrototyperAudioProcessorEdi
 //==============================================================================
 void Viator550BPrototyperAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    g.fillAll(juce::Colour::fromFloatRGBA(0.14f, 0.16f, 0.2f, 1.0));
-
+    //g.fillAll(juce::Colour::fromFloatRGBA(0.14f, 0.16f, 0.2f, 1.0));
+    juce::Image background = juce::ImageCache::getFromMemory(BinaryData::eqBackground_png, BinaryData::eqBackground_pngSize);
+    //g.drawImageAt (background, 0, 0);
+    //g.drawImage(background, 0, 0, AudioProcessorEditor::getWidth(), AudioProcessorEditor::getHeight(), 0, 0, AudioProcessorEditor::getWidth(), AudioProcessorEditor::getHeight());
+    g.drawImageWithin(background, 0, 0, AudioProcessorEditor::getWidth(), AudioProcessorEditor::getHeight(), juce::RectanglePlacement::stretchToFit);
 }
 
 void Viator550BPrototyperAudioProcessorEditor::resized()
 {
     juce::Rectangle<int> bounds = getLocalBounds();
-    
     //Left column of gui
     juce::FlexBox flexboxLeftThird;
     flexboxLeftThird.flexDirection = juce::FlexBox::Direction::column;
@@ -181,7 +183,6 @@ void Viator550BPrototyperAudioProcessorEditor::resized()
     for (auto i = 0; i < sliders.size(); i++) {
         sliders[i]->setBounds(tracks[i]->getX(), tracks[i]->getY(), tracks[i]->getWidth(), tracks[i]->getHeight());
     }
-
 }
 
 void Viator550BPrototyperAudioProcessorEditor::sliderValueChanged(juce::Slider *slider){
