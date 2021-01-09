@@ -28,7 +28,7 @@ public:
         float angle = rotaryStartAngle + (sliderPos * (rotaryEndAngle - rotaryStartAngle));
         
         juce::Rectangle<float> dialArea (rx, ry, diameter, diameter);
-        g.setColour(juce::Colour::fromFloatRGBA(0.133, 0.133, 0.133, 1)); //center
+        g.setColour(juce::Colour::fromFloatRGBA(0.15, 0.15, 0.15, 1)); //center
         g.fillEllipse(dialArea);
         g.setColour(juce::Colour::fromFloatRGBA(.2, .77, 1, .5)); //tick color
         
@@ -53,7 +53,7 @@ public:
         float angle = rotaryStartAngle + (sliderPos * (rotaryEndAngle - rotaryStartAngle));
         
         juce::Rectangle<float> dialArea (rx, ry, diameter, diameter);
-        g.setColour(juce::Colour::fromFloatRGBA(0.133, 0.133, 0.133, 1)); //center
+        g.setColour(juce::Colour::fromFloatRGBA(0.15, 0.15, 0.15, 1)); //center
         g.fillEllipse(dialArea);
         g.setColour(juce::Colour::fromFloatRGBA(1, 1, 1, .5)); //tick color
         
@@ -79,18 +79,18 @@ public:
 
 
 private:
-    juce::Slider lowSlider, lowMidSlider, highMidSlider, highSlider;
-    std::vector<juce::Slider*> sliders;
+    juce::Slider lowFrequencySlider, lowMidFrequencySlider, highMidFrequencySlider, highFrequencySlider;
+    std::vector<juce::Slider*> frequencySliders;
     
-    juce::Slider lowSliderTrack, lowMidSliderTrack, highMidSliderTrack, highSliderTrack, driveSliderTrack, trimSliderTrack;
-    std::vector<juce::Slider*> tracks;
+    juce::Slider lowBandGainSlider, lowMidBandGainSlider, highMidBandGainSlider, highBandGainSlider, driveSlider, trimSlider;
+    std::vector<juce::Slider*> bandGainSliders;
     
     juce::Label lowSliderLabel, lowMidSliderLabel, highMidSliderLabel, highSliderLabel, driveSliderLabel, trimSliderLabel;
     std::vector<juce::Label*> labels;
     
     juce::TextButton lowToggle, lowMidToggle, highMidToggle, highToggle;
     std::vector<juce::TextButton*> buttons;
-    
+        
     std::string lowSliderLabelText = "Low";
     std::string lowMidSliderLabelText = "Low Mid";
     std::string highMidSliderLabelText = "High Mid";
@@ -104,7 +104,10 @@ private:
     
     OtherLookAndFeel otherLookAndFeel;
     OtherLookAndFeel2 otherLookAndFeel2;
-
+    
+    juce::DropShadow props;
+    juce::DropShadowEffect shadowEffect;
+    
     Viator550BPrototyperAudioProcessor& audioProcessor;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Viator550BPrototyperAudioProcessorEditor)
