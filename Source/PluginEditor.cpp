@@ -59,6 +59,14 @@ Viator550BPrototyperAudioProcessorEditor::Viator550BPrototyperAudioProcessorEdit
         bandGainSliders[i]->setComponentEffect(&shadowEffect);
     }
     
+    lowFrequencySliderAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, lowFrequencySliderId, lowFrequencySlider);
+    lowMidFrequencySliderAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, lowMidFrequencySliderId, lowMidFrequencySlider);
+    highMidFrequencySliderAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, highMidFrequencySliderId, highMidFrequencySlider);
+    highFrequencySliderAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, highFrequencySliderId, highFrequencySlider);
+    driveAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, driveSliderId, driveSlider);
+    trimAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, trimSliderId, trimSlider);
+
+    
     driveSlider.setRange(0, 24, 0.5f);
     driveSlider.setDoubleClickReturnValue(true, 0);
     trimSlider.setRange(-36, 36, 0.5f);
@@ -78,6 +86,11 @@ Viator550BPrototyperAudioProcessorEditor::Viator550BPrototyperAudioProcessorEdit
         frequencySliders[i]->setLookAndFeel(&otherLookAndFeel);
         frequencySliders[i]->setComponentEffect(&shadowEffect);
     }
+    
+    lowBandGainAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, lowBandGainSliderId, lowBandGainSlider);
+    lowMidBandGainAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, lowMidBandGainSliderId, lowMidBandGainSlider);
+    highMidBandGainAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, highMidBandGainSliderId, highMidBandGainSlider);
+    highBandGainAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, highBandGainSliderId, highBandGainSlider);
     
     for (auto i = 0; i < labels.size(); i++) {
         addAndMakeVisible(labels[i]);
@@ -107,6 +120,10 @@ Viator550BPrototyperAudioProcessorEditor::Viator550BPrototyperAudioProcessorEdit
         }
     }
     
+    lowBandToggleAttach = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, lowToggleId, lowToggle);
+    lowMidBandToggleAttach = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, lowMidToggleId, lowMidToggle);
+    highMidBandToggleAttach = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, highMidToggleId, highMidToggle);
+    highBandToggleAttach = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.treeState, highToggleId, highToggle);
     
     AudioProcessorEditor::setResizable(true, true);
     AudioProcessorEditor::setResizeLimits(384, 288, 640, 480);

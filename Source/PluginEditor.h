@@ -100,7 +100,10 @@ private:
 
     std::vector<std::string> labelTexts;
     
-    std::unique_ptr <juce::AudioProcessorValueTreeState::SliderAttachment> lowSliderAttach, lowMidSliderAttach, highMidSliderAttach, highSliderAttach;
+    std::unique_ptr <juce::AudioProcessorValueTreeState::SliderAttachment> lowFrequencySliderAttach, lowMidFrequencySliderAttach, highMidFrequencySliderAttach, highFrequencySliderAttach,
+    lowBandGainAttach, lowMidBandGainAttach, highMidBandGainAttach, highBandGainAttach, driveAttach, trimAttach;
+    
+    std::unique_ptr <juce::AudioProcessorValueTreeState::ButtonAttachment> lowBandToggleAttach, lowMidBandToggleAttach, highMidBandToggleAttach, highBandToggleAttach;
     
     OtherLookAndFeel otherLookAndFeel;
     OtherLookAndFeel2 otherLookAndFeel2;

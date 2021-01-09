@@ -19,13 +19,58 @@ Viator550BPrototyperAudioProcessor::Viator550BPrototyperAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),
+treeState (*this, nullptr, "PARAMETER", createParameterLayout())
 #endif
 {
 }
 
 Viator550BPrototyperAudioProcessor::~Viator550BPrototyperAudioProcessor()
 {
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout Viator550BPrototyperAudioProcessor::createParameterLayout()
+{
+    std::vector <std::unique_ptr<juce::RangedAudioParameter>> params;
+    params.reserve(14);
+    
+    auto lowFrequencyParam = std::make_unique<juce::AudioParameterInt>(lowFrequencySliderId, lowFrequencySliderName, 0, 6, 0);
+    auto lowMidFrequencyParam = std::make_unique<juce::AudioParameterInt>(lowMidFrequencySliderId, lowMidFrequencySliderName, 0, 6, 0);
+    auto highMidFrequencyParam = std::make_unique<juce::AudioParameterInt>(highMidFrequencySliderId, highMidFrequencySliderName, 0, 6, 0);
+    auto highFrequencyParam = std::make_unique<juce::AudioParameterInt>(highFrequencySliderId, highFrequencySliderName, 0, 6, 0);
+    
+    auto lowGainParam = std::make_unique<juce::AudioParameterFloat>(lowBandGainSliderId, lowBandGainSliderName, -18.0f, 18.0f, 0.0f);
+    auto lowMidGainParam = std::make_unique<juce::AudioParameterFloat>(lowMidBandGainSliderId, lowMidBandGainSliderName, -24, 24, 0);
+    auto highMidGainParam = std::make_unique<juce::AudioParameterFloat>(highMidBandGainSliderId, highMidBandGainSliderName, -24, 24, 0);
+    auto highGainParam = std::make_unique<juce::AudioParameterFloat>(highBandGainSliderId, highBandGainSliderName, 0, 24, 0);
+    
+    auto lowToggleParam = std::make_unique<juce::AudioParameterBool>(lowToggleId, lowToggleName, false);
+    auto lowMidToggleParam = std::make_unique<juce::AudioParameterBool>(lowMidToggleId, lowMidToggleName, false);
+    auto highMidToggleParam = std::make_unique<juce::AudioParameterBool>(highMidToggleId, highMidToggleName, false);
+    auto highToggleParam = std::make_unique<juce::AudioParameterBool>(highToggleId, highToggleName, false);
+    
+    auto driveParam = std::make_unique<juce::AudioParameterFloat>(driveSliderId, driveSliderName, 0, 24, 0);
+    auto trimParam = std::make_unique<juce::AudioParameterFloat>(trimSliderId, trimSliderName, -24, 24, 0);
+    
+    params.push_back(std::move(lowFrequencyParam));
+    params.push_back(std::move(lowMidFrequencyParam));
+    params.push_back(std::move(highMidFrequencyParam));
+    params.push_back(std::move(highFrequencyParam));
+    
+    params.push_back(std::move(lowGainParam));
+    params.push_back(std::move(lowMidGainParam));
+    params.push_back(std::move(highMidGainParam));
+    params.push_back(std::move(highGainParam));
+    
+    params.push_back(std::move(lowToggleParam));
+    params.push_back(std::move(lowMidToggleParam));
+    params.push_back(std::move(highMidToggleParam));
+    params.push_back(std::move(highToggleParam));
+    
+    params.push_back(std::move(driveParam));
+    params.push_back(std::move(trimParam));
+    
+    return { params.begin(), params.end() };
 }
 
 //==============================================================================
@@ -170,15 +215,16 @@ juce::AudioProcessorEditor* Viator550BPrototyperAudioProcessor::createEditor()
 //==============================================================================
 void Viator550BPrototyperAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
+    juce::MemoryOutputStream stream(destData, false);
+        treeState.state.writeToStream (stream);
 }
 
 void Viator550BPrototyperAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
+    juce::ValueTree tree = juce::ValueTree::readFromData (data, size_t (sizeInBytes));
+        if (tree.isValid()) {
+            treeState.state = tree;
+        }
 }
 
 //==============================================================================
