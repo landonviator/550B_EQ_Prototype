@@ -54,7 +54,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout Viator550BPrototyperAudioPro
     auto highToggleParam = std::make_unique<juce::AudioParameterBool>(highToggleId, highToggleName, false);
     
     auto driveParam = std::make_unique<juce::AudioParameterFloat>(driveSliderId, driveSliderName, 0, 24, 0);
-    auto trimParam = std::make_unique<juce::AudioParameterFloat>(trimSliderId, trimSliderName, -24, 24, 0);
+    auto trimParam = std::make_unique<juce::AudioParameterFloat>(trimSliderId, trimSliderName, -36, 36, 0);
     
     params.push_back(std::move(lowFrequencyParam));
     params.push_back(std::move(lowMidFrequencyParam));

@@ -13,7 +13,7 @@
             file="Source/PluginEditor.cpp"/>
       <FILE id="Git0BZ" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
-    <FILE id="CdJgu6" name="eqBackground.png" compile="0" resource="1"
+    <FILE id="PUUhkj" name="eqBackground.png" compile="0" resource="1"
           file="eqBackground.png"/>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
