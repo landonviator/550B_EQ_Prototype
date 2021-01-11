@@ -20,7 +20,11 @@ Viator550BPrototyperAudioProcessor::Viator550BPrototyperAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        ),
-treeState (*this, nullptr, "PARAMETER", createParameterLayout())
+treeState (*this, nullptr, "PARAMETER", createParameterLayout()),
+lowFilter(juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100.0f, 30.0f, 1.0f, 1.0f)),
+lowMidFilter(juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100.0f, 75, 1.0f, 1.0f)),
+highMidFilter(juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100.0f, 800.0f, 1.0f, 1.0f)),
+highFilter(juce::dsp::IIR::Coefficients<float>::makePeakFilter(44100.0f, 2500.0f, 1.0f, 1.0f))
 #endif
 {
 }
@@ -39,10 +43,10 @@ juce::AudioProcessorValueTreeState::ParameterLayout Viator550BPrototyperAudioPro
     auto highMidFrequencyParam = std::make_unique<juce::AudioParameterInt>(highMidFrequencySliderId, highMidFrequencySliderName, 0, 6, 0);
     auto highFrequencyParam = std::make_unique<juce::AudioParameterInt>(highFrequencySliderId, highFrequencySliderName, 0, 6, 0);
     
-    auto lowGainParam = std::make_unique<juce::AudioParameterFloat>(lowBandGainSliderId, lowBandGainSliderName, -18.0f, 18.0f, 0.0f);
-    auto lowMidGainParam = std::make_unique<juce::AudioParameterFloat>(lowMidBandGainSliderId, lowMidBandGainSliderName, -24, 24, 0);
-    auto highMidGainParam = std::make_unique<juce::AudioParameterFloat>(highMidBandGainSliderId, highMidBandGainSliderName, -24, 24, 0);
-    auto highGainParam = std::make_unique<juce::AudioParameterFloat>(highBandGainSliderId, highBandGainSliderName, 0, 24, 0);
+    auto lowGainParam = std::make_unique<juce::AudioParameterFloat>(lowBandGainSliderId, lowBandGainSliderName, -15, 15, 0);
+    auto lowMidGainParam = std::make_unique<juce::AudioParameterFloat>(lowMidBandGainSliderId, lowMidBandGainSliderName, -15, 15, 0);
+    auto highMidGainParam = std::make_unique<juce::AudioParameterFloat>(highMidBandGainSliderId, highMidBandGainSliderName, -15, 15, 0);
+    auto highGainParam = std::make_unique<juce::AudioParameterFloat>(highBandGainSliderId, highBandGainSliderName, -15, 15, 0);
     
     auto lowToggleParam = std::make_unique<juce::AudioParameterBool>(lowToggleId, lowToggleName, false);
     auto lowMidToggleParam = std::make_unique<juce::AudioParameterBool>(lowMidToggleId, lowMidToggleName, false);
@@ -138,8 +142,16 @@ void Viator550BPrototyperAudioProcessor::changeProgramName (int index, const juc
 //==============================================================================
 void Viator550BPrototyperAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    lastSampleRate = sampleRate;
+    juce::dsp::ProcessSpec spec;
+    spec.sampleRate = sampleRate;
+    spec.maximumBlockSize = samplesPerBlock;
+    spec.numChannels = getTotalNumOutputChannels();
+    
+    lowFilter.prepare(spec);
+    lowMidFilter.prepare(spec);
+    highMidFilter.prepare(spec);
+    highFilter.prepare(spec);
 }
 
 void Viator550BPrototyperAudioProcessor::releaseResources()
@@ -177,28 +189,72 @@ void Viator550BPrototyperAudioProcessor::processBlock (juce::AudioBuffer<float>&
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
-
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
+    
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
+    juce::dsp::AudioBlock<float> block (buffer);
+    
+    auto* rawLowFrequency = treeState.getRawParameterValue(lowFrequencySliderId);
+    auto* rawLowMidFrequency = treeState.getRawParameterValue(lowMidFrequencySliderId);
+    auto* rawHighMidFrequency = treeState.getRawParameterValue(highMidFrequencySliderId);
+    auto* rawHighFrequency = treeState.getRawParameterValue(highFrequencySliderId);
+    
+    auto* rawLowGain = treeState.getRawParameterValue(lowBandGainSliderId);
+    auto* rawLowMidGain = treeState.getRawParameterValue(lowMidBandGainSliderId);
+    auto* rawHighMidGain = treeState.getRawParameterValue(highMidBandGainSliderId);
+    auto* rawHighGain = treeState.getRawParameterValue(highBandGainSliderId);
+    
+    updateLowFilter(*rawLowGain, *rawLowFrequency);
+    updateLowMidFilter(*rawLowMidGain, *rawLowMidFrequency);
+    updateHighMidFilter(*rawHighMidGain, *rawHighMidFrequency);
+    updateHighFilter(*rawHighGain, *rawHighFrequency);
+    
+    lowFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
+    lowMidFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
+    highMidFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
+    highFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
+}
 
-        // ..do something to the data...
+void Viator550BPrototyperAudioProcessor::updateLowFilter(float gain, int rawFreqKnob){
+    
+    //The frequency knob has 7 values, so each one is assigned to a vector of the frequencies
+    auto frequency = rawLowFrequencySliderValues[rawFreqKnob];
+    float quality;
+    
+    if (rawFreqKnob >= 4){
+        if (abs(gain) < 6.0) {
+            quality = lowFilterQValues[rawFreqKnob];
+        } else {
+            quality = pow(10, (abs(gain) - 6.0) * 0.055) - 0.7f;
+        }
+    } else {
+        quality = lowFilterQValues[rawFreqKnob];
     }
+    
+    *lowFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate, frequency, quality, pow(10, gain * 0.09f));
+    //std::cout << "Low Band Frequency: " << frequency << std::endl;
+//    std::cout << "Low Band Gain: " << gain << std::endl;
+    std::cout << "Low Band Q: " << quality << std::endl;
+    //std::cout << "F: " << rawFreqKnob << std::endl;
+}
+
+void Viator550BPrototyperAudioProcessor::updateLowMidFilter(float gain, int rawFreqKnob){
+    auto frequency = rawLowMidFrequencySliderValues[rawFreqKnob];
+    *lowMidFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate, frequency, 1.0, pow(10, gain * 0.09f));
+    //std::cout << "Low Mid Band Frequency: " << frequency << std::endl;
+}
+
+void Viator550BPrototyperAudioProcessor::updateHighMidFilter(float gain, int rawFreqKnob){
+    auto frequency = rawHighMidFrequencySliderValues[rawFreqKnob];
+    *highMidFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate, frequency, 1.0, pow(10, gain * 0.09f));
+    //std::cout << "High Mid Band Frequency: " << frequency << std::endl;
+}
+
+void Viator550BPrototyperAudioProcessor::updateHighFilter(float gain, int rawFreqKnob){
+    auto frequency = rawHighFrequencySliderValues[rawFreqKnob];
+    *highFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate, frequency, 1.0, pow(10, gain * 0.09f));
+    //std::cout << "High Band Frequency: " << frequency << std::endl;
 }
 
 //==============================================================================

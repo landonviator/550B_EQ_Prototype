@@ -28,10 +28,12 @@ public:
         float angle = rotaryStartAngle + (sliderPos * (rotaryEndAngle - rotaryStartAngle));
         
         juce::Rectangle<float> dialArea (rx, ry, diameter, diameter);
-        g.setColour(juce::Colour::fromFloatRGBA(0.15, 0.15, 0.15, 1)); //center
+        //g.setColour(juce::Colour::fromFloatRGBA(0.15, 0.15, 0.15, 1)); //center
+        g.setColour(juce::Colours::darkgrey);
         g.fillEllipse(dialArea);
-        g.setColour(juce::Colour::fromFloatRGBA(.2, .77, 1, .5)); //tick color
-        
+        //g.setColour(juce::Colour::fromFloatRGBA(.2, .77, 1, .5)); //tick color
+        g.setColour(juce::Colours::cornflowerblue); //tick color
+
         juce::Path dialTick;
         dialTick.addRectangle(0, -radius + 3, 3.0f, radius * .5);
         g.fillPath(dialTick, juce::AffineTransform::rotation(angle).translated(centerX, centerY));
@@ -53,9 +55,10 @@ public:
         float angle = rotaryStartAngle + (sliderPos * (rotaryEndAngle - rotaryStartAngle));
         
         juce::Rectangle<float> dialArea (rx, ry, diameter, diameter);
-        g.setColour(juce::Colour::fromFloatRGBA(0.15, 0.15, 0.15, 1)); //center
+        //g.setColour(juce::Colour::fromFloatRGBA(0.15, 0.15, 0.15, 1)); //center
+        g.setColour(juce::Colours::darkgrey);
         g.fillEllipse(dialArea);
-        g.setColour(juce::Colour::fromFloatRGBA(1, 1, 1, .5)); //tick color
+        g.setColour(juce::Colours::slategrey); //tick color
         
         juce::Path dialTick;
         dialTick.addRectangle(0, -radius + 3, 3.0f, radius * .5);
@@ -64,6 +67,7 @@ public:
         g.drawEllipse(rx, ry, diameter, diameter, 1.0f);
     }
 };
+
 
 class Viator550BPrototyperAudioProcessorEditor  : public juce::AudioProcessorEditor, juce::Slider::Listener, juce::Button::Listener
 {

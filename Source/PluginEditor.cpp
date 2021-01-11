@@ -49,7 +49,7 @@ Viator550BPrototyperAudioProcessorEditor::Viator550BPrototyperAudioProcessorEdit
         addAndMakeVisible(bandGainSliders[i]);
         bandGainSliders[i]->setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
         bandGainSliders[i]->setTextBoxStyle(juce::Slider::TextBoxBelow, true, 64, 32);
-        bandGainSliders[i]->setRange(-18, 18, 1.5);
+        bandGainSliders[i]->setRange(-15, 15, 1.5f);
         bandGainSliders[i]->setColour(0x1001700, juce::Colour::fromFloatRGBA(0, 0, 0, 0));
         bandGainSliders[i]->setColour(0x1001400, juce::Colour::fromFloatRGBA(1, 1, 1, 0.0f));
         bandGainSliders[i]->setColour(0x1001300, juce::Colour::fromFloatRGBA(1, 1, 1, 0));
@@ -57,6 +57,7 @@ Viator550BPrototyperAudioProcessorEditor::Viator550BPrototyperAudioProcessorEdit
         bandGainSliders[i]->setColour(0x1001311, juce::Colour::fromFloatRGBA(.2, .77, 1, 0.5f));
         bandGainSliders[i]->setLookAndFeel(&otherLookAndFeel2);
         bandGainSliders[i]->setComponentEffect(&shadowEffect);
+        bandGainSliders[i]->setDoubleClickReturnValue(true, 0.0f);
     }
     
     lowFrequencySliderAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, lowFrequencySliderId, lowFrequencySlider);
@@ -69,8 +70,16 @@ Viator550BPrototyperAudioProcessorEditor::Viator550BPrototyperAudioProcessorEdit
     
     driveSlider.setRange(0, 24, 0.5f);
     driveSlider.setDoubleClickReturnValue(true, 0);
+    driveSlider.setColour(0x1001400, juce::Colour::fromFloatRGBA(.392, .584, .929, 0.5f));
+    driveSlider.setTextValueSuffix(" dB");
+    driveSlider.setComponentEffect(&shadowEffect);
+
     trimSlider.setRange(-36, 36, 0.5f);
     trimSlider.setDoubleClickReturnValue(true, 0);
+    trimSlider.setColour(0x1001400, juce::Colour::fromFloatRGBA(.392, .584, .929, 0.5f));
+    trimSlider.setTextValueSuffix(" dB");
+    trimSlider.setComponentEffect(&shadowEffect);
+
     
     //Sliders, frequency
     for (auto i = 0; i < frequencySliders.size(); i++) {
@@ -85,6 +94,7 @@ Viator550BPrototyperAudioProcessorEditor::Viator550BPrototyperAudioProcessorEdit
         frequencySliders[i]->setColour(0x1001311, juce::Colour::fromFloatRGBA(.2, .77, 1, 0.5f));
         frequencySliders[i]->setLookAndFeel(&otherLookAndFeel);
         frequencySliders[i]->setComponentEffect(&shadowEffect);
+        frequencySliders[i]->setDoubleClickReturnValue(true, 0);
     }
     
     lowBandGainAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, lowBandGainSliderId, lowBandGainSlider);
@@ -93,7 +103,7 @@ Viator550BPrototyperAudioProcessorEditor::Viator550BPrototyperAudioProcessorEdit
     highBandGainAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, highBandGainSliderId, highBandGainSlider);
     
     for (auto i = 0; i < labels.size(); i++) {
-        addAndMakeVisible(labels[i]);
+        //addAndMakeVisible(labels[i]);
         labels[i]->setText(labelTexts[i], juce::dontSendNotification);
         labels[i]->setJustificationType(juce::Justification::centred);
         labels[i]->setColour(0x1000281, juce::Colour::fromFloatRGBA(1, 1, 1, 0.5f));
@@ -102,14 +112,15 @@ Viator550BPrototyperAudioProcessorEditor::Viator550BPrototyperAudioProcessorEdit
     for (auto i = 0; i < buttons.size(); i++) {
         addAndMakeVisible(buttons[i]);
         buttons[i]->addListener(this);
-        buttons[i]->setButtonText("Gain");
+        buttons[i]->setButtonText(labelTexts[i] + " Gain");
         buttons[i]->setColour(0x1000100, juce::Colour::fromFloatRGBA(0, 0, 0, .25));
         buttons[i]->setColour(0x1000c00, juce::Colour::fromFloatRGBA(0, 0, 0, 0));
         buttons[i]->setColour(0x1000101, juce::Colour::fromFloatRGBA(0, 0, 0, .15));
         buttons[i]->setColour(0x1000102, juce::Colour::fromFloatRGBA(1, 1, 1, 0.35));
-        buttons[i]->setColour(0x1000103, juce::Colour::fromFloatRGBA(.23, .77, 1, 0.5));
+        //buttons[i]->setColour(0x1000103, juce::Colour::fromFloatRGBA(.23, .77, 1, 0.5));
+        buttons[i]->setColour(0x1000103, juce::Colours::cornflowerblue);
+
         buttons[i]->setClickingTogglesState(true);
-        buttons[i]->changeWidthToFitText();
         
         if (buttons[i]->getToggleState() == true) {
             bandGainSliders[i]->setVisible(false);
@@ -138,9 +149,9 @@ Viator550BPrototyperAudioProcessorEditor::~Viator550BPrototyperAudioProcessorEdi
 //==============================================================================
 void Viator550BPrototyperAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    g.fillAll(juce::Colour::fromFloatRGBA(0.14f, 0.16f, 0.2f, 1.0));
-//    juce::Image background = juce::ImageCache::getFromMemory(BinaryData::eqBackground_png, BinaryData::eqBackground_pngSize);
-//    g.drawImageWithin(background, 0, 0, AudioProcessorEditor::getWidth(), AudioProcessorEditor::getHeight(), juce::RectanglePlacement::stretchToFit);
+      g.fillAll(juce::Colour::fromFloatRGBA(0.14f, 0.16f, 0.2f, 1.0));
+    juce::Image background = juce::ImageCache::getFromMemory(BinaryData::eqBackground_png, BinaryData::eqBackground_pngSize);
+    g.drawImageWithin(background, 0, 0, AudioProcessorEditor::getWidth(), AudioProcessorEditor::getHeight(), juce::RectanglePlacement::stretchToFit);
 }
 
 void Viator550BPrototyperAudioProcessorEditor::resized()
@@ -153,8 +164,8 @@ void Viator550BPrototyperAudioProcessorEditor::resized()
     flexboxLeftThird.alignContent = juce::FlexBox::AlignContent::stretch;
     
     juce::Array<juce::FlexItem> itemArrayLeftThird;
-    itemArrayLeftThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, highMidBandGainSlider).withMargin(juce::FlexItem::Margin(AudioProcessorEditor::getWidth() * 0.1f, 0, 0, 0)));
-    itemArrayLeftThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, lowBandGainSlider).withMargin(juce::FlexItem::Margin(0, 0, 0, 0)));
+    itemArrayLeftThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, highMidBandGainSlider).withMargin(juce::FlexItem::Margin(AudioProcessorEditor::getWidth() * 0.05f, 0, 0, 0)));
+    itemArrayLeftThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, lowBandGainSlider).withMargin(juce::FlexItem::Margin(AudioProcessorEditor::getWidth() * 0.05f, 0, 0, 0)));
     
     flexboxLeftThird.items = itemArrayLeftThird;
     flexboxLeftThird.performLayout(bounds.removeFromLeft(bounds.getWidth() / 3));
@@ -167,8 +178,8 @@ void Viator550BPrototyperAudioProcessorEditor::resized()
     flexboxMiddleThird.alignContent = juce::FlexBox::AlignContent::stretch;
     
     juce::Array<juce::FlexItem> itemArrayMiddleThird;
-    itemArrayMiddleThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, highBandGainSlider).withMargin(juce::FlexItem::Margin(AudioProcessorEditor::getWidth() * 0.1f, 0, 0, 0)));
-    itemArrayMiddleThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, lowMidBandGainSlider).withMargin(juce::FlexItem::Margin(0, 0, 0, 0)));
+    itemArrayMiddleThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, highBandGainSlider).withMargin(juce::FlexItem::Margin(AudioProcessorEditor::getWidth() * 0.05f, 0, 0, 0)));
+    itemArrayMiddleThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, lowMidBandGainSlider).withMargin(juce::FlexItem::Margin(AudioProcessorEditor::getWidth() * 0.05f, 0, 0, 0)));
     
     flexboxMiddleThird.items = itemArrayMiddleThird;
     flexboxMiddleThird.performLayout(bounds.removeFromLeft(bounds.getWidth() / 2));
@@ -181,8 +192,8 @@ void Viator550BPrototyperAudioProcessorEditor::resized()
     flexboxRightThird.alignContent = juce::FlexBox::AlignContent::stretch;
     
     juce::Array<juce::FlexItem> itemArrayRightThird;
-    itemArrayRightThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, driveSlider).withMargin(juce::FlexItem::Margin(AudioProcessorEditor::getWidth() * 0.1f, 0, 0, 0)));
-    itemArrayRightThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, trimSlider).withMargin(juce::FlexItem::Margin(0, 0, 0, 0)));
+    itemArrayRightThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, driveSlider).withMargin(juce::FlexItem::Margin(AudioProcessorEditor::getWidth() * 0.05f, 0, 0, 0)));
+    itemArrayRightThird.add(juce::FlexItem(bounds.getWidth() / 3.5, bounds.getHeight() / 2.5, trimSlider).withMargin(juce::FlexItem::Margin(AudioProcessorEditor::getWidth() * 0.05f, 0, 0, 0)));
     
     flexboxRightThird.items = itemArrayRightThird;
     flexboxRightThird.performLayout(bounds.removeFromLeft(bounds.getWidth()));
@@ -197,13 +208,14 @@ void Viator550BPrototyperAudioProcessorEditor::resized()
     highSliderLabel.setBounds(highBandGainSlider.getX() + (highBandGainSlider.getWidth() * 0.25), (highBandGainSlider.getY() * .95) - AudioProcessorEditor::getWidth() * 0.1f, highBandGainSlider.getWidth() * .5, highBandGainSlider.getHeight() * .75);
     driveSliderLabel.setBounds(driveSlider.getX() + (driveSlider.getWidth() * 0.25), (driveSlider.getY() * .95) - AudioProcessorEditor::getWidth() * 0.1f, driveSlider.getWidth() * .5, driveSlider.getHeight() * .75);
     
-    lowToggle.setBounds(lowBandGainSlider.getX() + (lowBandGainSlider.getWidth() * .32), lowBandGainSlider.getY() + (lowBandGainSlider.getHeight() * .75), lowSliderLabel.getWidth() * .75, lowSliderLabel.getHeight() * .25);
-    lowMidToggle.setBounds(lowMidBandGainSlider.getX() + (lowMidBandGainSlider.getWidth() * .32), lowMidBandGainSlider.getY() + (lowMidBandGainSlider.getHeight() * .75), lowMidSliderLabel.getWidth() * .75, lowMidSliderLabel.getHeight()* .25);
-    highMidToggle.setBounds(highMidBandGainSlider.getX() + (highMidBandGainSlider.getWidth() * .32), highMidBandGainSlider.getY() + (highMidBandGainSlider.getHeight() * .75), highMidSliderLabel.getWidth() * .75, highMidSliderLabel.getHeight()* .25);
-    highToggle.setBounds(highBandGainSlider.getX() + (highBandGainSlider.getWidth() * .32), highBandGainSlider.getY() + (highBandGainSlider.getHeight() * .75), highSliderLabel.getWidth() * .75, highSliderLabel.getHeight()* .25);
+    lowToggle.setBounds(lowBandGainSlider.getX() + (lowBandGainSlider.getWidth() * .25), lowBandGainSlider.getY() + (lowBandGainSlider.getHeight() * .8), lowSliderLabel.getWidth(), lowSliderLabel.getHeight() * .25);
+    lowMidToggle.setBounds(lowMidBandGainSlider.getX() + (lowMidBandGainSlider.getWidth() * .18), lowMidBandGainSlider.getY() + (lowMidBandGainSlider.getHeight() * .8), lowMidSliderLabel.getWidth() * .75, lowMidSliderLabel.getHeight()* .25);
+    highMidToggle.setBounds(highMidBandGainSlider.getX() + (highMidBandGainSlider.getWidth() * .18), highMidBandGainSlider.getY() + (highMidBandGainSlider.getHeight() * .8), highMidSliderLabel.getWidth() * .75, highMidSliderLabel.getHeight()* .25);
+    highToggle.setBounds(highBandGainSlider.getX() + (highBandGainSlider.getWidth() * .25), highBandGainSlider.getY() + (highBandGainSlider.getHeight() * .8), highSliderLabel.getWidth() * .75, highSliderLabel.getHeight()* .25);
     
     for (auto i = 0; i < frequencySliders.size(); i++) {
         frequencySliders[i]->setBounds(bandGainSliders[i]->getX(), bandGainSliders[i]->getY(), bandGainSliders[i]->getWidth(), bandGainSliders[i]->getHeight());
+        buttons[i]->changeWidthToFitText();
     }    
 }
 
@@ -216,11 +228,11 @@ void Viator550BPrototyperAudioProcessorEditor::buttonClicked(juce::Button *butto
     for (auto i = 0; i < buttons.size(); i++) {
         if (button == buttons[i]){
             if (buttons[i]->getToggleState() == true){
-                buttons[i]->setButtonText("Freq");
+                buttons[i]->setButtonText(labelTexts[i] + " Freq");
                 frequencySliders[i]->setVisible(true);
                 bandGainSliders[i]->setVisible(false);
             } else {
-                buttons[i]->setButtonText("Gain");
+                buttons[i]->setButtonText(labelTexts[i] + " Gain");
                 bandGainSliders[i]->setVisible(true);
                 frequencySliders[i]->setVisible(false);
 

@@ -277,13 +277,6 @@
 			path = "../../JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp";
 			sourceTree = "SOURCE_ROOT";
 		};
-		29A785131C63D1D517F1999E = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = eqBackground.png;
-			path = ../../Source/eqBackground.png;
-			sourceTree = "SOURCE_ROOT";
-		};
 		344B6FF5A4D0A9AC21F441D2 = {
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
@@ -416,6 +409,13 @@
 			name = "juce_audio_utils";
 			path = "/Users/land00m/Documents/JUCE/modules/juce_audio_utils";
 			sourceTree = "<absolute>";
+		};
+		77BFBC9EA8603DC8046AA51F = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = eqBackground.png;
+			path = ../../eqBackground.png;
+			sourceTree = "SOURCE_ROOT";
 		};
 		7CBDFB3C5C5E24039B791FBC = {
 			isa = PBXFileReference;
@@ -614,7 +614,7 @@
 			isa = PBXGroup;
 			children = (
 				0843186592535B1FC76022F6,
-				29A785131C63D1D517F1999E,
+				77BFBC9EA8603DC8046AA51F,
 			);
 			name = Viator550BPrototyper;
 			sourceTree = "<group>";
