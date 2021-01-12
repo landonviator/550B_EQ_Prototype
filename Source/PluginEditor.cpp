@@ -68,7 +68,7 @@ Viator550BPrototyperAudioProcessorEditor::Viator550BPrototyperAudioProcessorEdit
     trimAttach = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.treeState, trimSliderId, trimSlider);
 
     //Drive slider is processed differently than the band sliders
-    driveSlider.setRange(0, 24, 0.5f);
+    driveSlider.setRange(0, 36, 0.5f);
     driveSlider.setDoubleClickReturnValue(true, 0);
     driveSlider.setColour(0x1001400, juce::Colour::fromFloatRGBA(1, 1, 1, .5));
     driveSlider.setColour(0x1001500, juce::Colour::fromFloatRGBA(0, 0, 0, .25));

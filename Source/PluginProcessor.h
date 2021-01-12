@@ -102,11 +102,18 @@ public:
     
     std::vector<float> lowFilterQValues = {1.2f, 1.1f, 2.6f, 0.75f, 0.39f, 0.33f, 0.30f};
     std::vector<float> lowMidFilterQValues = {1.3f, 1.6f, 2.3f, 1.0f, 1.6f, 1.6f, 1.4f};
+    std::vector<float> highMidFilterQValues = {1.0f, 1.0f, 1.9f, 1.9f, 1.0f, 1.0f, 1.9f};
+    std::vector<float> highFilterQValues = {0.6f, 0.6f, 0.6f, 0.6f, 1.0f, 1.0f, 0.3f};
     
 private:
     
     juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>>
     lowFilter, lowMidFilter, highMidFilter, highFilter;
+    
+    juce::dsp::WaveShaper<float> waveShaperProcessor;
+    
+    juce::dsp::Gain<float> inputProcessor;
+    juce::dsp::Gain<float> trimProcessor;
         
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 

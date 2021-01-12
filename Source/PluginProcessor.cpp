@@ -53,7 +53,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout Viator550BPrototyperAudioPro
     auto highMidToggleParam = std::make_unique<juce::AudioParameterBool>(highMidToggleId, highMidToggleName, false);
     auto highToggleParam = std::make_unique<juce::AudioParameterBool>(highToggleId, highToggleName, false);
     
-    auto driveParam = std::make_unique<juce::AudioParameterFloat>(driveSliderId, driveSliderName, 0, 24, 0);
+    auto driveParam = std::make_unique<juce::AudioParameterFloat>(driveSliderId, driveSliderName, 0, 36, 0);
     auto trimParam = std::make_unique<juce::AudioParameterFloat>(trimSliderId, trimSliderName, -36, 36, 0);
     
     params.push_back(std::move(lowFrequencyParam));
@@ -148,10 +148,17 @@ void Viator550BPrototyperAudioProcessor::prepareToPlay (double sampleRate, int s
     spec.maximumBlockSize = samplesPerBlock;
     spec.numChannels = getTotalNumOutputChannels();
     
+    inputProcessor.prepare(spec);
+    
     lowFilter.prepare(spec);
     lowMidFilter.prepare(spec);
     highMidFilter.prepare(spec);
     highFilter.prepare(spec);
+    
+    waveShaperProcessor.prepare(spec);
+    waveShaperProcessor.functionToUse = juce::dsp::FastMathApproximations::tanh;
+    
+    trimProcessor.prepare(spec);
 }
 
 void Viator550BPrototyperAudioProcessor::releaseResources()
@@ -205,15 +212,36 @@ void Viator550BPrototyperAudioProcessor::processBlock (juce::AudioBuffer<float>&
     auto* rawHighMidGain = treeState.getRawParameterValue(highMidBandGainSliderId);
     auto* rawHighGain = treeState.getRawParameterValue(highBandGainSliderId);
     
+    auto* rawDrive = treeState.getRawParameterValue(driveSliderId);
+    auto* rawTrim = treeState.getRawParameterValue(trimSliderId);
+    
     updateLowFilter(*rawLowGain, *rawLowFrequency);
     updateLowMidFilter(*rawLowMidGain, *rawLowMidFrequency);
     updateHighMidFilter(*rawHighMidGain, *rawHighMidFrequency);
     updateHighFilter(*rawHighGain, *rawHighFrequency);
-    
+
+    if (*rawLowGain != 0.0f){
     lowFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
+    }
+    
+    if (*rawLowMidGain != 0.0f){
     lowMidFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
+    }
+    if (*rawHighMidGain != 0.0f){
     highMidFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
+    }
+    
+    if (*rawHighGain != 0.0f){
     highFilter.process(juce::dsp::ProcessContextReplacing<float>(block));
+    }
+    
+    inputProcessor.setGainDecibels(*rawDrive);
+    inputProcessor.process(juce::dsp::ProcessContextReplacing<float>(block));
+    
+    waveShaperProcessor.process(juce::dsp::ProcessContextReplacing<float>(block));
+    
+    trimProcessor.setGainDecibels((*rawDrive * -0.777f) + *rawTrim);
+    trimProcessor.process(juce::dsp::ProcessContextReplacing<float>(block));
 }
 
 void Viator550BPrototyperAudioProcessor::updateLowFilter(float gain, int rawFreqKnob){
@@ -233,13 +261,10 @@ void Viator550BPrototyperAudioProcessor::updateLowFilter(float gain, int rawFreq
     }
     
     *lowFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate, frequency, quality, pow(10, gain * 0.09f));
-    //std::cout << "Low Band Frequency: " << frequency << std::endl;
-//    std::cout << "Low Band Gain: " << gain << std::endl;
-    //std::cout << "Low Band Q: " << quality << std::endl;
-    //std::cout << "F: " << rawFreqKnob << std::endl;
 }
 
 void Viator550BPrototyperAudioProcessor::updateLowMidFilter(float gain, int rawFreqKnob){
+   
     //The frequency knob has 7 values, so each one is assigned to a vector of the frequencies
     auto frequency = rawLowMidFrequencySliderValues[rawFreqKnob];
     float quality;
@@ -259,22 +284,47 @@ void Viator550BPrototyperAudioProcessor::updateLowMidFilter(float gain, int rawF
         }
     }
     
-    *lowMidFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate, frequency, 1.0, pow(10, gain * 0.09f));
-    std::cout << "Low Mid Band Frequency: " << frequency << std::endl;
-    std::cout << "Q: " << quality << std::endl;
-
+    *lowMidFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate, frequency, quality, pow(10, gain * 0.09f));
 }
 
 void Viator550BPrototyperAudioProcessor::updateHighMidFilter(float gain, int rawFreqKnob){
+    
+    //The frequency knob has 7 values, so each one is assigned to a vector of the frequencies
     auto frequency = rawHighMidFrequencySliderValues[rawFreqKnob];
-    *highMidFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate, frequency, 1.0, pow(10, gain * 0.09f));
-    //std::cout << "High Mid Band Frequency: " << frequency << std::endl;
+    float quality = highMidFilterQValues[rawFreqKnob];
+    
+    if (quality == 1.0f){
+        if (abs(gain) < 6.0) {
+            quality = highMidFilterQValues[rawFreqKnob];
+        } else {
+            quality = pow(10, (abs(gain) - 6.0) * 0.088);
+        }
+    } else {
+        if (abs(gain) < 6.0) {
+            quality = highMidFilterQValues[rawFreqKnob];
+        } else {
+            quality = pow(10, (abs(gain) - 6.0) * 0.08) + 0.9f;
+        }
+    }
+
+    *highMidFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate, frequency, quality, pow(10, gain * 0.09f));
 }
 
 void Viator550BPrototyperAudioProcessor::updateHighFilter(float gain, int rawFreqKnob){
+    
+    //The frequency knob has 7 values, so each one is assigned to a vector of the frequencies
     auto frequency = rawHighFrequencySliderValues[rawFreqKnob];
-    *highFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate, frequency, 1.0, pow(10, gain * 0.09f));
-    //std::cout << "High Band Frequency: " << frequency << std::endl;
+    float quality = highFilterQValues[rawFreqKnob];
+    
+    if (quality == 0.6f){
+        if (abs(gain) < 6.0) {
+            quality = highFilterQValues[rawFreqKnob];
+        } else {
+            quality = pow(10, (abs(gain) - 6.0) * 0.035) - 0.4f;
+        }
+    }
+    
+    *highFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate, frequency, quality, pow(10, gain * 0.09f));
 }
 
 //==============================================================================
