@@ -235,14 +235,34 @@ void Viator550BPrototyperAudioProcessor::updateLowFilter(float gain, int rawFreq
     *lowFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate, frequency, quality, pow(10, gain * 0.09f));
     //std::cout << "Low Band Frequency: " << frequency << std::endl;
 //    std::cout << "Low Band Gain: " << gain << std::endl;
-    std::cout << "Low Band Q: " << quality << std::endl;
+    //std::cout << "Low Band Q: " << quality << std::endl;
     //std::cout << "F: " << rawFreqKnob << std::endl;
 }
 
 void Viator550BPrototyperAudioProcessor::updateLowMidFilter(float gain, int rawFreqKnob){
+    //The frequency knob has 7 values, so each one is assigned to a vector of the frequencies
     auto frequency = rawLowMidFrequencySliderValues[rawFreqKnob];
+    float quality;
+    
+    //Q 2 is the only that is drastically different enough to warrant it's own algorithm
+    if (rawFreqKnob != 2){
+        if (abs(gain) < 6.0) {
+            quality = lowMidFilterQValues[rawFreqKnob];
+        } else {
+            quality = pow(10, (abs(gain) - 6.0) * 0.085) + 0.3f;
+        }
+    } else {
+        if (abs(gain) < 6.0) {
+            quality = lowMidFilterQValues[rawFreqKnob];
+        } else {
+            quality = pow(10, (abs(gain) - 6.0) * 0.075) + 1.6f;
+        }
+    }
+    
     *lowMidFilter.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate, frequency, 1.0, pow(10, gain * 0.09f));
-    //std::cout << "Low Mid Band Frequency: " << frequency << std::endl;
+    std::cout << "Low Mid Band Frequency: " << frequency << std::endl;
+    std::cout << "Q: " << quality << std::endl;
+
 }
 
 void Viator550BPrototyperAudioProcessor::updateHighMidFilter(float gain, int rawFreqKnob){

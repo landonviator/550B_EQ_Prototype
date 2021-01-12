@@ -80,28 +80,27 @@ public:
     void resized() override;
     void sliderValueChanged(juce::Slider* slider) override;
     void buttonClicked(juce::Button* button) override;
+    
 
 
 private:
+    
+    juce::Image background;
+    
     juce::Slider lowFrequencySlider, lowMidFrequencySlider, highMidFrequencySlider, highFrequencySlider;
     std::vector<juce::Slider*> frequencySliders;
     
     juce::Slider lowBandGainSlider, lowMidBandGainSlider, highMidBandGainSlider, highBandGainSlider, driveSlider, trimSlider;
     std::vector<juce::Slider*> bandGainSliders;
     
-    juce::Label lowSliderLabel, lowMidSliderLabel, highMidSliderLabel, highSliderLabel, driveSliderLabel, trimSliderLabel;
+    juce::Label driveSliderLabel, trimSliderLabel;
     std::vector<juce::Label*> labels;
     
     juce::TextButton lowToggle, lowMidToggle, highMidToggle, highToggle;
     std::vector<juce::TextButton*> buttons;
-        
-    std::string lowSliderLabelText = "Low";
-    std::string lowMidSliderLabelText = "Low Mid";
-    std::string highMidSliderLabelText = "High Mid";
-    std::string highSliderLabelText = "High";
+            
     std::string driveSliderLabelText = "Drive";
     std::string trimSliderLabelText = "Trim";
-
     std::vector<std::string> labelTexts;
     
     std::unique_ptr <juce::AudioProcessorValueTreeState::SliderAttachment> lowFrequencySliderAttach, lowMidFrequencySliderAttach, highMidFrequencySliderAttach, highFrequencySliderAttach,

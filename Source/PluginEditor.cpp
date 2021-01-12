@@ -24,14 +24,14 @@ Viator550BPrototyperAudioProcessorEditor::Viator550BPrototyperAudioProcessorEdit
         &lowBandGainSlider, &lowMidBandGainSlider, &highMidBandGainSlider, &highBandGainSlider, &driveSlider, &trimSlider
     };
     
-    labels.reserve(6);
+    labels.reserve(2);
     labels = {
-        &lowSliderLabel, &lowMidSliderLabel, &highMidSliderLabel, &highSliderLabel, &driveSliderLabel, &trimSliderLabel
+         &driveSliderLabel, &trimSliderLabel
     };
     
-    labelTexts.reserve(6);
+    labelTexts.reserve(2);
     labelTexts = {
-        lowSliderLabelText, lowMidSliderLabelText, highMidSliderLabelText, highSliderLabelText, driveSliderLabelText, trimSliderLabelText
+         driveSliderLabelText, trimSliderLabelText
     };
     
     frequencySliders.reserve(4);
@@ -162,13 +162,16 @@ void Viator550BPrototyperAudioProcessorEditor::paint (juce::Graphics& g)
 {
     //Background color
     g.fillAll(juce::Colour::fromFloatRGBA(0.14f, 0.16f, 0.2f, 1.0));
+    
     //Image layer from Illustrator
-    juce::Image background = juce::ImageCache::getFromMemory(BinaryData::eqBackground_png, BinaryData::eqBackground_pngSize);
+    background = juce::ImageCache::getFromMemory(BinaryData::eqBackground_png, BinaryData::eqBackground_pngSize);
     g.drawImageWithin(background, 0, 0, AudioProcessorEditor::getWidth(), AudioProcessorEditor::getHeight(), juce::RectanglePlacement::stretchToFit);
 }
 
 void Viator550BPrototyperAudioProcessorEditor::resized()
 {
+    
+    
     //Master bounds object
     juce::Rectangle<int> bounds = getLocalBounds();
     
@@ -219,16 +222,16 @@ void Viator550BPrototyperAudioProcessorEditor::resized()
     driveSliderLabel.setBounds(driveSlider.getX() + (driveSlider.getWidth() * 0.25), (driveSlider.getY() * .95) - AudioProcessorEditor::getWidth() * 0.1f, driveSlider.getWidth() * .5, driveSlider.getHeight() * .75);
     
     //Making the buttons resize
-    lowToggle.setBounds(lowBandGainSlider.getX() + (lowBandGainSlider.getWidth() * .33), lowBandGainSlider.getY() + (lowBandGainSlider.getHeight() * .8), lowSliderLabel.getWidth(), lowSliderLabel.getHeight() * .25);
-    lowMidToggle.setBounds(lowMidBandGainSlider.getX() + (lowMidBandGainSlider.getWidth() * .33), lowMidBandGainSlider.getY() + (lowMidBandGainSlider.getHeight() * .8), lowMidSliderLabel.getWidth() * .75, lowMidSliderLabel.getHeight()* .25);
-    highMidToggle.setBounds(highMidBandGainSlider.getX() + (highMidBandGainSlider.getWidth() * .33), highMidBandGainSlider.getY() + (highMidBandGainSlider.getHeight() * .8), highMidSliderLabel.getWidth() * .75, highMidSliderLabel.getHeight()* .25);
-    highToggle.setBounds(highBandGainSlider.getX() + (highBandGainSlider.getWidth() * .33), highBandGainSlider.getY() + (highBandGainSlider.getHeight() * .8), highSliderLabel.getWidth() * .75, highSliderLabel.getHeight()* .25);
+    lowToggle.setBounds(lowBandGainSlider.getX() + (lowBandGainSlider.getWidth() * .33), lowBandGainSlider.getY() + (lowBandGainSlider.getHeight() * .8), driveSliderLabel.getWidth(), driveSliderLabel.getHeight() * .25);
+    lowMidToggle.setBounds(lowMidBandGainSlider.getX() + (lowMidBandGainSlider.getWidth() * .33), lowMidBandGainSlider.getY() + (lowMidBandGainSlider.getHeight() * .8), driveSliderLabel.getWidth() * .75, driveSliderLabel.getHeight()* .25);
+    highMidToggle.setBounds(highMidBandGainSlider.getX() + (highMidBandGainSlider.getWidth() * .33), highMidBandGainSlider.getY() + (highMidBandGainSlider.getHeight() * .8), driveSliderLabel.getWidth() * .75, driveSliderLabel.getHeight()* .25);
+    highToggle.setBounds(highBandGainSlider.getX() + (highBandGainSlider.getWidth() * .33), highBandGainSlider.getY() + (highBandGainSlider.getHeight() * .8), driveSliderLabel.getWidth() * .75, driveSliderLabel.getHeight()* .25);
     
     //Making the sliders resize
     for (auto i = 0; i < frequencySliders.size(); i++) {
         frequencySliders[i]->setBounds(bandGainSliders[i]->getX(), bandGainSliders[i]->getY(), bandGainSliders[i]->getWidth(), bandGainSliders[i]->getHeight());
         buttons[i]->changeWidthToFitText();
-    }    
+    }
 }
 
 void Viator550BPrototyperAudioProcessorEditor::sliderValueChanged(juce::Slider *slider){

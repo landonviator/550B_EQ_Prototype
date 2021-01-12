@@ -101,6 +101,7 @@ public:
     std::vector<float> rawHighFrequencySliderValues = {2500.0f, 5000.0f, 7000.0f, 10000.0f, 12500.0f, 15000.0f, 20000.0f};
     
     std::vector<float> lowFilterQValues = {1.2f, 1.1f, 2.6f, 0.75f, 0.39f, 0.33f, 0.30f};
+    std::vector<float> lowMidFilterQValues = {1.3f, 1.6f, 2.3f, 1.0f, 1.6f, 1.6f, 1.4f};
     
 private:
     
