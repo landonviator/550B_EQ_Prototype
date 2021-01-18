@@ -28,14 +28,14 @@ public:
         float angle = rotaryStartAngle + (sliderPos * (rotaryEndAngle - rotaryStartAngle));
         
         juce::Rectangle<float> dialArea (rx, ry, diameter, diameter);
-        //g.setColour(juce::Colour::fromFloatRGBA(0.15, 0.15, 0.15, 1)); //center
-        g.setColour(juce::Colours::darkgrey);
+        g.setColour(juce::Colour::fromFloatRGBA(0.15, 0.15, 0.15, 1)); //center
+        g.setGradientFill(juce::ColourGradient::horizontal(juce::Colour::fromFloatRGBA(0.07, 0.07, 0.07, 1), centerY * .25, juce::Colour::fromFloatRGBA(0.15, 0.15, 0.15, 1), centerY * 2.5));
         g.fillEllipse(dialArea);
-        //g.setColour(juce::Colour::fromFloatRGBA(.2, .77, 1, .5)); //tick color
-        g.setColour(juce::Colours::cornflowerblue); //tick color
+        g.setColour(juce::Colour::fromFloatRGBA(0.392f, 0.584f, 0.929f, 0.5f)); //tick color
+
 
         juce::Path dialTick;
-        dialTick.addRectangle(0, -radius + 3, 3.0f, radius * .5);
+        dialTick.addRectangle(0, -radius + 3, 3.0f, radius * 0.452211);
         g.fillPath(dialTick, juce::AffineTransform::rotation(angle).translated(centerX, centerY));
         g.setColour(juce::Colour::fromFloatRGBA(0, 0, 0, .25)); //outline
         g.drawEllipse(rx, ry, diameter, diameter, 1.0f);
@@ -55,8 +55,8 @@ public:
         float angle = rotaryStartAngle + (sliderPos * (rotaryEndAngle - rotaryStartAngle));
         
         juce::Rectangle<float> dialArea (rx, ry, diameter, diameter);
-        //g.setColour(juce::Colour::fromFloatRGBA(0.15, 0.15, 0.15, 1)); //center
-        g.setColour(juce::Colours::darkgrey);
+        g.setColour(juce::Colour::fromFloatRGBA(0.15, 0.15, 0.15, 1)); //center
+        g.setGradientFill(juce::ColourGradient::horizontal(juce::Colour::fromFloatRGBA(0.07, 0.07, 0.07, 1), centerY * .25, juce::Colour::fromFloatRGBA(0.15, 0.15, 0.15, 1), centerY * 2.5));
         g.fillEllipse(dialArea);
         g.setColour(juce::Colours::slategrey); //tick color
         

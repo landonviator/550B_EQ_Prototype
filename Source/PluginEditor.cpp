@@ -39,8 +39,8 @@ Viator550BPrototyperAudioProcessorEditor::Viator550BPrototyperAudioProcessorEdit
         &lowFrequencySlider, &lowMidFrequencySlider, &highMidFrequencySlider, &highFrequencySlider
     };
     
-    props.radius = 5;
-    props.offset = juce::Point<int> (-1, 2);
+    props.radius = 15;
+    props.offset = juce::Point<int> (-2, 6);
     shadowEffect.setShadowProperties (props);
     
     //Slider tracks, gain
@@ -127,7 +127,7 @@ Viator550BPrototyperAudioProcessorEditor::Viator550BPrototyperAudioProcessorEdit
         buttons[i]->setColour(0x1000101, juce::Colour::fromFloatRGBA(0, 0, 0, .15));
         buttons[i]->setColour(0x1000102, juce::Colour::fromFloatRGBA(1, 1, 1, 0.35));
         buttons[i]->setColour(0x1000103, juce::Colour::fromFloatRGBA(.23, .77, 1, 0.5));
-        buttons[i]->setColour(0x1000103, juce::Colours::cornflowerblue);
+        buttons[i]->setColour(0x1000103, juce::Colour::fromFloatRGBA(0.392f, 0.584f, 0.929f, 0.5f));
         buttons[i]->setClickingTogglesState(true);
         
         //Making sure the buttons show the correct value when opening the gui again
